@@ -6,8 +6,6 @@
 #include <typeinfo>
 #include <any>
 
-using Entity = int;
-
 namespace Event
 {
     struct MouseClick
@@ -67,22 +65,25 @@ class Dispatcher
 	}
 };
 
-void printPos(Event::MouseClick event)
+namespace Listenser
 {
-    std::cout << "x: " << event.x << " y: " << event.y << "\n";
-}
+    void printPos(Event::MouseClick event)
+    {
+        std::cout << "x: " << event.x << " y: " << event.y << "\n";
+    }
 
-const int BOUNDS_X = 10;
-const int BOUNDS_Y = 10;
+    const int BOUNDS_X = 10;
+    const int BOUNDS_Y = 10;
 
-void checkBoundsX(Event::MouseClick event)
-{
-    if (event.x > BOUNDS_X) std::cout << "x boundary crossed!" << "\n";
-}
+    void checkBoundsX(Event::MouseClick event)
+    {
+        if (event.x > BOUNDS_X) std::cout << "x boundary crossed!" << "\n";
+    }
 
-void checkBoundsY(Event::MouseClick event)
-{
-    if (event.y > BOUNDS_Y) std::cout << "y boundary crossed!" << "\n";
+    void checkBoundsY(Event::MouseClick event)
+    {
+        if (event.y > BOUNDS_Y) std::cout << "y boundary crossed!" << "\n";
+    }
 }
 
 int main() 
@@ -91,10 +92,12 @@ int main()
 
     dis.registerEvent<Event::MouseClick>();
 
-    std::function<void(Event::MouseClick)> listener1 = printPos;
-    std::function<void(Event::MouseClick)> listener2 = checkBoundsX;
-    std::function<void(Event::MouseClick)> listener3 = checkBoundsY;
+    // listener creation
+    std::function<void(Event::MouseClick)> listener1 = Listenser::printPos;
+    std::function<void(Event::MouseClick)> listener2 = Listenser::checkBoundsX;
+    std::function<void(Event::MouseClick)> listener3 = Listenser::checkBoundsY;
 
+    // listener registration
     dis.listen<Event::MouseClick>(listener1);
     dis.listen<Event::MouseClick>(listener2);
     dis.listen<Event::MouseClick>(listener3);
